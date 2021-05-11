@@ -4,6 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleCalculatorTest {
     private SimpleCalculator simpleCalculator;
@@ -74,5 +78,18 @@ class SimpleCalculatorTest {
         double actualResult = this.simpleCalculator.divide(prefix, suffix);
         //  ASSERT
         Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1,0",
+            "0,2",
+            "0,0"})
+    public void should_throwBadRequest_when_divideByZero(int prefix, int suffix) {
+        //  ARRANGE
+        //  ACT
+        Throwable throwable = assertThrows(ResponseStatusException.class, () -> this.simpleCalculator.divide(prefix, suffix));
+        //  ASSERT
+        assertThat(throwable.getMessage()).isEqualTo("400 BAD_REQUEST \"Unable to divide by Zero\"");
     }
 }

@@ -122,27 +122,6 @@ class CalculationControllerTest {
     }
 
     @Test
-    void should_throwBadRequest_when_dividingByZero() throws Exception {
-        //  ARRANGE
-        CalculationDto calculationDto = new CalculationDto();
-        calculationDto.setPrefix(0);
-        calculationDto.setOperator("/");
-        calculationDto.setSuffix(0);
-
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(calculationsUrl);
-        requestBuilder.content(objectMapper.writeValueAsString(calculationDto));
-        requestBuilder.contentType(MediaType.APPLICATION_JSON);
-
-        //  ACT
-        //  ASSERT
-        this.mockMvc.perform(requestBuilder).andExpect(status().isBadRequest())
-                .andExpect(result -> Assertions.assertThat(result.getResolvedException()
-                        instanceof HttpMessageNotReadableException))
-                .andExpect(result -> Assertions.assertThat(result.getResolvedException().getMessage())
-                        .contains("400 BAD_REQUEST \"Unable to divide by Zero\""));
-    }
-
-    @Test
     void should_throwBadRequest_when_OperatorIsEmpty() throws Exception {
         //  ARRANGE
         CalculationDto calculationDto = new CalculationDto();
